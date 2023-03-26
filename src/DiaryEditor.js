@@ -1,6 +1,9 @@
-import {useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {DiaryDispatchContext} from "./App";
 
 const DiaryEditor = () => {
+
+  const {onCreate} = useContext(DiaryDispatchContext);
 
   const authorInput = useRef();
   const contentInput = useRef();
@@ -19,20 +22,26 @@ const DiaryEditor = () => {
   };
 
   const handleSubmit = () => {
-    if (state.author.length < 1){
+    if (state.author.length < 1) {
       // alert("작성자는 최소 1글자 이상 입력해주세요");
       authorInput.current.focus();
       return;
     }
 
-    if (state.content.length < 5){
+    if (state.content.length < 5) {
       // alert("일기 본문은 최소 5글자 이상 입력해주세요");
       contentInput.current.focus();
       return;
     }
 
+    onCreate(state.author, state.content, state.emotion);
     alert("저장 성공!");
-  }
+    setState({
+      author: "",
+      content: "",
+      emotion: 1,
+    })
+  };
 
   return (
       <div className="DiaryEditor">
@@ -75,11 +84,9 @@ const DiaryEditor = () => {
           <button onClick={handleSubmit}>일기 저장하기</button>
         </div>
 
-
-
       </div>
   );
 };
 
-export default DiaryEditor;
+export default React.memo(DiaryEditor);
 
